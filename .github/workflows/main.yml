@@ -11,18 +11,17 @@ jobs:
     - name: Checkout Source Code
       uses: actions/checkout@v4
       with:
-        submodules: recursive # Автоматически скачает встроенные зависимости (Go/Rust компоненты)
+        submodules: recursive
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '6.x' # Proton VPN работает на .NET 6
+        dotnet-version: '8.x' # Современные версии Proton используют актуальный .NET SDK
 
-    - name: Restore Dependencies
-      run: dotnet restore src/ProtonVPN.sln
-
-    - name: Publish Client Executable
-      run: dotnet publish src/Client/ProtonVPN.Client/ProtonVPN.Client.csproj -c Release -r win-x64 --self-contained -o build_output
+    - name: Restore and Build
+      run: |
+        dotnet restore src/ProtonVPN.slnx
+        dotnet publish src/Client/ProtonVPN.Client/ProtonVPN.Client.csproj -c Release -r win-x64 --self-contained -o build_output
 
     - name: Upload Finished Exe
       uses: actions/upload-artifact@v4
